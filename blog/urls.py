@@ -15,21 +15,35 @@ Including another URLconf
 """
 import xadmin
 from django.conf.urls import url, include
-from apps.article.views import ArticleListViewSet, ArticleDetailViewSet
+from apps.article.views import ArticleListViewSet, ArticleDetailViewSet, TagViewSet, ArticleCategoryViewSet, CommentLikeViewSet
 from apps.article.views import CommentViewSet
+from apps.siteinfo.views import SiteInfoViewSet
+from apps.bloggerinfo.views import BloggerInfoViewSet
 from django.views.static import serve
 from .settings import MEDIA_ROOT
 
+from apps.index.views import index
+
+from apps.article.feed import BlogFeed
+
 from rest_framework import routers
+
 router = routers.DefaultRouter()
 router.register(r'articlelist', ArticleListViewSet, base_name='articlelist')
 router.register(r'articledetail', ArticleDetailViewSet, base_name='articledetail')
-router.register(r'comment', CommentViewSet)
+router.register(r'taglist', TagViewSet, base_name='taglist')
+router.register(r'comment', CommentViewSet, base_name='comment')
+router.register(r'commentlike', CommentLikeViewSet, base_name='commentlike')
+router.register(r'category', ArticleCategoryViewSet, base_name='category')
+router.register(r'siteinfo', SiteInfoViewSet)
+router.register(r'bloggerinfo', BloggerInfoViewSet)
 
 urlpatterns = [
-    url('api/', include(router.urls)),  # Api Root
-    url('xadmin/', xadmin.site.urls),
+    url('^api/', include(router.urls)),  # Api Root
+    url('^xadmin/', xadmin.site.urls),
     # 富文本
     url('ueditor/', include('DjangoUeditor.urls')),
-    url(r'^media/(?P<path>.*)$', serve, {'document_root':MEDIA_ROOT})
+    url(r'^media/(?P<path>.*)$', serve, {'document_root': MEDIA_ROOT}),
+    url('^api/rss/', BlogFeed(), name='rss'),
+    url('^.*$', index),
 ]

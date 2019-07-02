@@ -14,7 +14,7 @@ class UserModelAdmin(object):
 
 
 class CategoryModelAdmin(object):
-    list_display = ['id', 'catgory']
+    list_display = ['id', 'category']
 
 
 class TagsModelAdmin(object):
@@ -22,11 +22,14 @@ class TagsModelAdmin(object):
 
 
 class CommentModelAdmin(object):
-    list_display = ['id', 'author', 'article', 'content', 'create_time', 'like']
+    list_display = ['id', 'author', 'article', 'content',
+                    'create_time', 'like', 'unlike',
+                    'sub_comment_count', 'is_root',
+                    'is_top', 'belong_root', 'super_comment']
 
 
 xadmin.site.register(models.ArticleModel, ArticleModelAdmin)
 xadmin.site.register(models.User, UserModelAdmin)
-xadmin.site.register(models.Catgory, CategoryModelAdmin)
+xadmin.site.register(models.ArticleCategory, CategoryModelAdmin)
 xadmin.site.register(models.Comment, CommentModelAdmin)
 xadmin.site.register(models.Tags, TagsModelAdmin)
