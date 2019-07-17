@@ -2,5 +2,5 @@ from django.apps import AppConfig
 
 
 class SiteinfoConfig(AppConfig):
-    name = 'apps.siteinfo'
+    name = 'siteinfo'
     verbose_name = '站点信息'

@@ -1,6 +1,6 @@
 from django.contrib.syndication.views import Feed
 from django.shortcuts import reverse
-from .models import ArticleModel
+from .models import Article
 
 
 class BlogFeed(Feed):
@@ -13,7 +13,7 @@ class BlogFeed(Feed):
 
     def items(self):
         # 返回所有文章
-        return ArticleModel.objects.all()
+        return Article.objects.all()
 
     def item_title(self, item):
         # 返回文章标题

@@ -15,28 +15,36 @@ Including another URLconf
 """
 import xadmin
 from django.conf.urls import url, include
-from apps.article.views import ArticleListViewSet, ArticleDetailViewSet, TagViewSet, ArticleCategoryViewSet, CommentLikeViewSet
-from apps.article.views import CommentViewSet
-from apps.siteinfo.views import SiteInfoViewSet
-from apps.bloggerinfo.views import BloggerInfoViewSet
+from article.views import ArticleListViewSet, ArticleDetailViewSet
+from siteinfo.views import SiteInfoViewSet
+from bloggerinfo.views import BloggerInfoViewSet
+
+from comment.views import CommentViewSet, CommentLikeViewSet, CommentsViewsets
+
 from django.views.static import serve
 from .settings import MEDIA_ROOT
 
-from apps.index.views import index
+from index.views import index
 
-from apps.article.feed import BlogFeed
+from article.feed import BlogFeed
+
+from base.views import CategoryViewSet
+from base.views import CategorysViewSet
 
 from rest_framework import routers
 
 router = routers.DefaultRouter()
 router.register(r'articlelist', ArticleListViewSet, base_name='articlelist')
 router.register(r'articledetail', ArticleDetailViewSet, base_name='articledetail')
-router.register(r'taglist', TagViewSet, base_name='taglist')
+# router.register(r'taglist', TagViewSet, base_name='taglist')
 router.register(r'comment', CommentViewSet, base_name='comment')
 router.register(r'commentlike', CommentLikeViewSet, base_name='commentlike')
-router.register(r'category', ArticleCategoryViewSet, base_name='category')
+router.register(r'comments', CommentsViewsets, base_name='comments')
+
 router.register(r'siteinfo', SiteInfoViewSet)
 router.register(r'bloggerinfo', BloggerInfoViewSet)
+router.register(r'allcategory', CategoryViewSet, base_name='allcategory')
+router.register(r'allcategorys', CategorysViewSet, base_name='allcategorys')
 
 urlpatterns = [
     url('^api/', include(router.urls)),  # Api Root
