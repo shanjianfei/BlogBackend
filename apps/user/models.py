@@ -4,15 +4,19 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 
-class Person(User):
+class Person(models.Model):
     gender_choice = (
         (0, 'female'),
         (1, 'male')
     )
+    username = models.CharField(verbose_name='名字', max_length=120, unique=True)
+    age = models.IntegerField(verbose_name='年龄', null=True, blank=True)
     phone = models.CharField(verbose_name='手机号码', max_length=11, null=True, blank=True)
+    email = models.EmailField(verbose_name='邮箱', max_length=150, blank=True, null=True)
     gender = models.IntegerField(verbose_name='性别', choices=gender_choice, null=True, blank=True)
     avater = models.ImageField(verbose_name='头像', upload_to='avater', null=True, blank=True)
     create_time = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
+    active = models.BooleanField(verbose_name='活跃状态', default=True)
 
     def __str__(self):
         return self.username
