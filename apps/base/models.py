@@ -1,5 +1,6 @@
 import datetime
 from django.db import models
+from django.db.models import F
 from user.models import AuthorProfile, UserProfile
 from DjangoUeditor.models import UEditorField
 
@@ -45,6 +46,7 @@ class Tags(models.Model):
     label = models.CharField(verbose_name='标签名称', max_length=32)
     description = models.CharField(verbose_name='标签描述', max_length=250, null=True, blank=True)
     color = models.CharField(verbose_name='标签颜色', max_length=20, default='#409EFF', choices=COLOR_TYPE)
+    article_count = models.IntegerField(verbose_name='文章数量', default=0)
 
     class Meta:
         verbose_name = '标签'

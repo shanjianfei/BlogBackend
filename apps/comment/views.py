@@ -9,11 +9,13 @@ from .filter import CommentFilter
 
 # Create your views here.
 
-class  CommentPagination(pagination.PageNumberPagination):
+
+class CommentPagination(pagination.PageNumberPagination):
     page_size = 10
     max_page_size = 20
     page_query_param = 'page'
     page_size_query_param = 'size'
+
 
 class CommentLikeViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     serializer_class = CommentLikeSerializer
@@ -65,10 +67,6 @@ class CommentViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.
             self.perform_create(serializer)
             return Response(status=status.HTTP_201_CREATED, data={'result': '添加评论成功'})
 
-    # def get_queryset(self):
-    #     # 显示根评论
-    #     return Comment.objects.filter(is_root=True)
-
     def get_serializer_class(self):
         if self.action == 'list':
             return SubCommentSerializer
@@ -76,7 +74,3 @@ class CommentViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.
             return SubCommentSerializer
         else:
             return CommentSerializer
-
-class CommentsViewsets(mixins.ListModelMixin, viewsets.GenericViewSet):
-    serializer_class = CommentSerializer
-    queryset = Comment.objects.all()

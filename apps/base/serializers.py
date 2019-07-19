@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import BlogCategory
+from .models import BlogCategory, Tags
+from article.models import Article
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -16,4 +17,10 @@ class CategorySerializer3(serializers.ModelSerializer):
     sub_category = CategorySerializer2(many=True)
     class Meta:
         model = BlogCategory
+        fields = '__all__'
+
+
+class TagsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tags
         fields = '__all__'

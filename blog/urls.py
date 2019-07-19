@@ -19,7 +19,7 @@ from article.views import ArticleListViewSet, ArticleDetailViewSet
 from siteinfo.views import SiteInfoViewSet
 from bloggerinfo.views import BloggerInfoViewSet
 
-from comment.views import CommentViewSet, CommentLikeViewSet, CommentsViewsets
+from comment.views import CommentViewSet, CommentLikeViewSet
 
 from django.views.static import serve
 from .settings import MEDIA_ROOT
@@ -28,18 +28,16 @@ from index.views import index
 
 from article.feed import BlogFeed
 
-from base.views import CategoryViewSet
-from base.views import CategorysViewSet
+from base.views import CategoryViewSet, CategorysViewSet, TagsViewSet
 
 from rest_framework import routers
 
 router = routers.DefaultRouter()
 router.register(r'articlelist', ArticleListViewSet, base_name='articlelist')
 router.register(r'articledetail', ArticleDetailViewSet, base_name='articledetail')
-# router.register(r'taglist', TagViewSet, base_name='taglist')
+router.register(r'tag', TagsViewSet, base_name='tag')
 router.register(r'comment', CommentViewSet, base_name='comment')
 router.register(r'commentlike', CommentLikeViewSet, base_name='commentlike')
-router.register(r'comments', CommentsViewsets, base_name='comments')
 
 router.register(r'siteinfo', SiteInfoViewSet)
 router.register(r'bloggerinfo', BloggerInfoViewSet)
