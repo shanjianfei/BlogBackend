@@ -46,7 +46,6 @@ class Tags(models.Model):
     label = models.CharField(verbose_name='标签名称', max_length=32)
     description = models.CharField(verbose_name='标签描述', max_length=250, null=True, blank=True)
     color = models.CharField(verbose_name='标签颜色', max_length=20, default='#409EFF', choices=COLOR_TYPE)
-    article_count = models.IntegerField(verbose_name='文章数量', default=0)
 
     class Meta:
         verbose_name = '标签'
@@ -81,7 +80,7 @@ class BaseBlog(models.Model):
                                 upload_to='images/cover',
                                 null=True,
                                 blank=True)
-    tags = models.ManyToManyField(Tags, verbose_name='标签')
+    tags = models.ManyToManyField(Tags, related_name='blog', verbose_name='标签')
     comment_enable = models.BooleanField(verbose_name='是否开启评论功能', choices=comment_choices, default=True)
     click = models.IntegerField(verbose_name='点击量', default=0)
     like = models.IntegerField(verbose_name='点赞', default=0)

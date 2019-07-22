@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import viewsets
-from .models import BlogCategory, Tags
-from .serializers import CategorySerializer, CategorySerializer3, TagsSerializer
+from .models import BlogCategory, Tags, BaseBlog
+from .serializers import CategorySerializer, CategorySerializer3, TagsSerializer, BaseBlogSerialzier
 
 # Create your views here.
 
@@ -20,3 +20,8 @@ class CategorysViewSet(viewsets.ReadOnlyModelViewSet):
 class TagsViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = TagsSerializer
     queryset = Tags.objects.all()
+
+
+class BaseBlogViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = BaseBlogSerialzier
+    queryset = BaseBlog.objects.all()

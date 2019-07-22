@@ -2,12 +2,6 @@ from article.models import Article
 from rest_framework import serializers
 
 
-# class TagNormalSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Tags
-#         fields = ('label', 'color')
-
-
 class ArticleListSerializer(serializers.ModelSerializer):
     # comment = len(CommentSerializer(many=True).data)
     # tags = TagNormalSerializer(many=True)
@@ -31,26 +25,10 @@ class ArticleDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Article
         fields = ('title', 'content', 'create_time', 'update_time',
-                  'author', 'tags', 'click', 'like', 'comment_enable', 'brief_introduction', 'isrecommend')
+                  'author', 'tags', 'click', 'like', 'comment_enable', 'desc', 'isrecommend')
         read_only_fields = ('title', 'content', 'create_time', 'update_time',
-                            'author', 'tags', 'click', 'like', 'comment_enable', 'brief_introduction', 'isrecommend')
+                            'author', 'tags', 'click', 'like', 'comment_enable', 'desc', 'isrecommend')
 
 
-# class UserSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = User
-#         fields = ('user_id', 'name', 'phone', 'email', 'gender', 'avater')
-
-
-# 查询每个标签下有多少article
-# class TagSerializer(serializers.ModelSerializer):
-#     article_count = serializers.SerializerMethodField()
-
-#     def get_article_count(self, obj):
-#         return len(obj.articlemodel_set.all())
-
-#     class Meta:
-#         model = Tags
-#         fields = ('article_count', 'label', 'color')
-
-
+class ArticleLikeSerializer(serializers.Serializer):
+    like = serializers.BooleanField(required=True)

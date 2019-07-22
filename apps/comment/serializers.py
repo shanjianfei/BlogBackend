@@ -21,5 +21,6 @@ class SubCommentSerializer(serializers.ModelSerializer):
 
 # 评论点赞
 class CommentLikeSerializer(serializers.Serializer):
-    comment_id = serializers.IntegerField(required=True, label='评论id')
+    # comment_id = serializers.IntegerField(required=True, label='评论id')
     like = serializers.BooleanField(required=True, label='喜欢或者不喜欢') # true 为 like false 为 unlike
+    # like1 = serializers.CharField(required=True, max_length=120)

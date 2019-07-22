@@ -17,24 +17,20 @@ class CommentPagination(pagination.PageNumberPagination):
     page_size_query_param = 'size'
 
 
-class CommentLikeViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
+class CommentLikeViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
     serializer_class = CommentLikeSerializer
-    def create(self, request, *args, **kwargs):
+    queryset = Comment.objects.all()
+    def update(self, request, *args, **kwargs):
         serializer = self.get_serializer(data = request.data)
         serializer.is_valid(raise_exception=True)
-        comment_id = serializer.validated_data['comment_id']
         like = serializer.validated_data['like']
-        instance = Comment.objects.filter(id=comment_id)
-        if instance:
-            _instance = instance[0]
-            if like:
-                _instance.like += 1
-            else:
-                _instance.unlike += 1
-            _instance.save()
-            return Response(status=status.HTTP_200_OK, data={'result': '操作成功'})
+        instance = self.get_object()  # instance 不能存在报404错误，message： {"detail": "未找到。"}
+        if like:
+            instance.like += 1
         else:
-            return Response(status=status.HTTP_400_BAD_REQUEST, data={'result': '评论不存在'})
+            instance.unlike += 1
+        instance.save()
+        return Response(status=status.HTTP_200_OK, data={'result': '操作成功'})
 
 
 class CommentViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
@@ -42,7 +38,6 @@ class CommentViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.
     filter_backends = (DjangoFilterBackend, OrderingFilter)
     pagination_class = CommentPagination
     filter_class = CommentFilter
-    # filter_fields = ('article',)
     ordering = ('-create_time',)
 
     def create(self, request, *args, **kwargs):
@@ -59,7 +54,8 @@ class CommentViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.
             if super_comment and \
                 belong_root and \
                 (article.id == belong_root.article.id) and \
-                ((super_comment.belong_root == belong_root.id) or (super_comment.id == belong_root.id)):
+                ((super_comment.belong_root == belong_root.id) or \
+                (super_comment.id == belong_root.id)):
                 return Response(status=status.HTTP_201_CREATED, data={'result': '添加评论成功'})
             return Response(status=status.HTTP_400_BAD_REQUEST)
         else: # 根评论
