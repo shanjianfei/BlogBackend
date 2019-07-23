@@ -8,6 +8,26 @@ from DjangoUeditor.models import UEditorField
 # Create your models here.
 
 
+# class BaseCategory(models.Model):
+#     name = models.CharField(verbose_name='分类别名', max_length=25)
+#     desc = models.TextField(verbose_name='类别描述', max_length=120, null=True, blank=True)
+#     category = models.CharField(verbose_name='分类', max_length=25, choices=CATEGORY, help_text='添加到头部导航')
+#     parent_category = models.ForeignKey('self', verbose_name='父分类', related_name='sub_category', null=True, blank=True, help_text='父分类')
+#     create_time = models.DateTimeField(verbose_name='创建时间', auto_now=True)
+
+#     class Meta:
+#         abstruct = True
+
+
+# class FirstCategory(BaseCategory):
+#     CATEGORY = (
+#         ('article', '文章'),
+#         ('book', '书籍')
+#     )
+#     category = models.CharField(verbose_name='分类', max_length=25, choices=CATEGORY, help_text='添加到头部导航')
+#     category_level = models.IntegerField(verbose_name='分类等级', default=1, help_text='分类级别')
+
+
 class BlogCategory(models.Model):
     CATEGORY = (
         ('article', '文章'),

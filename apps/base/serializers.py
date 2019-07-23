@@ -2,22 +2,35 @@ from rest_framework import serializers
 from .models import BlogCategory, Tags, BaseBlog
 from article.models import Article
 
+class CategoryLevelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BlogCategory
+        fields = '__all__'
+        depth = 2
+
+
 class CategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = BlogCategory
-        fields = '__all__'
+    category = serializers.SerializerMethodField()
 
-class CategorySerializer2(serializers.ModelSerializer):
-    sub_category = CategorySerializer(many=True)
-    class Meta:
-        model = BlogCategory
-        fields = '__all__'
+    def get_category(self, instance):
+        return BlogCategory.objects.values_list('category', flat=True).distinct()
 
-class CategorySerializer3(serializers.ModelSerializer):
-    sub_category = CategorySerializer2(many=True)
     class Meta:
         model = BlogCategory
-        fields = '__all__'
+        fields = ('category',)
+
+
+# class CategorySerializer2(serializers.ModelSerializer):
+#     sub_category = CategorySerializer(many=True)
+#     class Meta:
+#         model = BlogCategory
+#         fields = '__all__'
+
+# class CategorySerializer3(serializers.ModelSerializer):
+#     sub_category = CategorySerializer2(many=True)
+#     class Meta:
+#         model = BlogCategory
+#         fields = '__all__'
 
 
 class TagsSerializer(serializers.ModelSerializer):

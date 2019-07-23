@@ -1,33 +1,25 @@
 from article.models import Article
+from comment.models import Comment
 from rest_framework import serializers
 
 
-class ArticleListSerializer(serializers.ModelSerializer):
-    # comment = len(CommentSerializer(many=True).data)
-    # tags = TagNormalSerializer(many=True)
-
-    class Meta:
-        model = Article
-        # fields = ('title', 'content', 'create_time', 'update_time',
-        # 'catgory', 'author', 'picture', 'tags', 'comment', 'click', 'like')
-        fields = ('id', 'title', 'desc', 'create_time',
-                  'update_time', 'author', 'click', 'like', 'category', 'istop', 'cover', 'isrecommend')
-        read_only_fields = ('id', 'title', 'desc', 'create_time',
-                            'update_time', 'author', 'cover',
-                            'click', 'like', 'category', 'istop', 'picture', 'isrecommend')
-        depth = 1
-
-
-class ArticleDetailSerializer(serializers.ModelSerializer):
-    # tags_label = serializers.CharField(source='tags.label', many=True)
+class ArticleSerializer(serializers.ModelSerializer):
     tags = serializers.StringRelatedField(many=True)
+    author = serializers.StringRelatedField()
+    category = serializers.StringRelatedField()
+    comment_count = serializers.SerializerMethodField()
+
+    def get_comment_count(self, instance):
+        return Comment.objects.filter(article=instance).count()
+        # return instance.comment_set.all().count()
 
     class Meta:
         model = Article
-        fields = ('title', 'content', 'create_time', 'update_time',
-                  'author', 'tags', 'click', 'like', 'comment_enable', 'desc', 'isrecommend')
-        read_only_fields = ('title', 'content', 'create_time', 'update_time',
-                            'author', 'tags', 'click', 'like', 'comment_enable', 'desc', 'isrecommend')
+        fields = ('id', 'title', 'desc', 'create_time',
+                  'update_time', 'tags', 'author', 'click', 'like', 'category', 'istop', 'cover', 'isrecommend', 'comment_count')
+        read_only_fields = ('id', 'title', 'desc', 'create_time',
+                            'update_time', 'tags', 'author', 'cover',
+                            'click', 'like', 'category', 'istop', 'picture', 'isrecommend', 'comment_count')
 
 
 class ArticleLikeSerializer(serializers.Serializer):

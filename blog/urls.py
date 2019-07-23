@@ -15,7 +15,7 @@ Including another URLconf
 """
 import xadmin
 from django.conf.urls import url, include
-from article.views import ArticleViewSet
+from article.views import ArticleViewSet, ArticleLikeViewSet
 from siteinfo.views import SiteInfoViewSet
 from bloggerinfo.views import BloggerInfoViewSet
 
@@ -28,12 +28,13 @@ from index.views import index
 
 from article.feed import BlogFeed
 
-from base.views import CategoryViewSet, CategorysViewSet, TagsViewSet, BaseBlogViewSet
+from base.views import CategoryLevelViewSet, CategoryViewSet, TagsViewSet, BaseBlogViewSet
 
 from rest_framework import routers
 
 router = routers.DefaultRouter()
 router.register(r'article', ArticleViewSet, base_name='article')
+router.register(r'articlelike', ArticleLikeViewSet, base_name='articlelike')
 router.register(r'tag', TagsViewSet, base_name='tag')
 router.register(r'blog', BaseBlogViewSet, base_name='blog')
 
@@ -42,8 +43,8 @@ router.register(r'commentlike', CommentLikeViewSet, base_name='commentlike')
 
 router.register(r'siteinfo', SiteInfoViewSet, base_name='siteinfo')
 router.register(r'bloggerinfo', BloggerInfoViewSet)
-router.register(r'allcategory', CategoryViewSet, base_name='allcategory')
-router.register(r'allcategorys', CategorysViewSet, base_name='allcategorys')
+router.register(r'categorylevel', CategoryLevelViewSet, base_name='categorylevel')
+router.register(r'category', CategoryViewSet, base_name='category')
 
 urlpatterns = [
     url('^api/', include(router.urls)),  # Api Root

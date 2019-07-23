@@ -1,6 +1,6 @@
 from rest_framework import viewsets, status, mixins, filters
 from rest_framework.response import Response
-from .serializers import ArticleListSerializer, ArticleDetailSerializer, ArticleLikeSerializer
+from .serializers import ArticleSerializer, ArticleLikeSerializer
 from article.models import Article
 from django_filters import rest_framework
 from .filters import ArticleListFilter
@@ -21,11 +21,11 @@ class ArticlePagination(PageNumberPagination):
         if not self.page.has_next():
             return None
         page_number = self.page.next_page_number()
-        print(self.page_query_param)
         return page_number
 
 class ArticleViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     queryset = Article.objects.all()
+    serializer_class = ArticleSerializer
     pagination_class = ArticlePagination
 
     # 分别对应 过滤、搜索、排序
@@ -34,22 +34,16 @@ class ArticleViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.
     search_fields = ('^category__name',)
     ordering_fields = ('update_time', 'click')
 
-    def get_serializer_class(self):
-        if self.action == 'list':
-            return ArticleListSerializer
-        else:
-            return ArticleDetailSerializer
-
     def retrieve(self, request, *args, **kwargs):
-        print(1)
         instance = self.get_object()
         instance.click = F('click') + 1
         instance.save()
+        instance = self.get_object()
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
 
-class ArticleLike(mixins.UpdateModelMixin, viewsets.GenericViewSet):
+class ArticleLikeViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
     serializer_class = ArticleLikeSerializer
     queryset = Article.objects.all()
 
