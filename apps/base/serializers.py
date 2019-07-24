@@ -1,36 +1,43 @@
 from rest_framework import serializers
-from .models import BlogCategory, Tags, BaseBlog
+from .models import BaseCategory, BlogCategory, Tags, BaseBlog
 from article.models import Article
 
-class CategoryLevelSerializer(serializers.ModelSerializer):
+
+class CategoryLevel1ListSerializer(serializers.ListSerializer):
+    def to_representation(self, data):
+        data = data.filter(category_level=1)
+        return super().to_representation(data)
+
+
+class CategoryLevelSerializer3(serializers.ModelSerializer):
     class Meta:
         model = BlogCategory
         fields = '__all__'
-        depth = 2
 
 
-class CategorySerializer(serializers.ModelSerializer):
-    category = serializers.SerializerMethodField()
-
-    def get_category(self, instance):
-        return BlogCategory.objects.values_list('category', flat=True).distinct()
+class CategoryLevelSerializer2(serializers.ModelSerializer):
+    sub_categorylevel = CategoryLevelSerializer3(many=True)
 
     class Meta:
         model = BlogCategory
-        fields = ('category',)
+        fields = '__all__'
 
 
-# class CategorySerializer2(serializers.ModelSerializer):
-#     sub_category = CategorySerializer(many=True)
-#     class Meta:
-#         model = BlogCategory
-#         fields = '__all__'
+class CategoryLevelSerializer(serializers.ModelSerializer):
+    sub_categorylevel = CategoryLevelSerializer2(many=True)
 
-# class CategorySerializer3(serializers.ModelSerializer):
-#     sub_category = CategorySerializer2(many=True)
-#     class Meta:
-#         model = BlogCategory
-#         fields = '__all__'
+    class Meta:
+        list_serializer_class = CategoryLevel1ListSerializer
+        model = BlogCategory
+        fields = '__all__'
+
+
+class BaseCategorySerializer(serializers.ModelSerializer):
+    sub_category = CategoryLevelSerializer(many=True)
+
+    class Meta:
+        model = BaseCategory
+        fields = '__all__'
 
 
 class TagsSerializer(serializers.ModelSerializer):

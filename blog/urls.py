@@ -28,7 +28,7 @@ from index.views import index
 
 from article.feed import BlogFeed
 
-from base.views import CategoryLevelViewSet, CategoryViewSet, TagsViewSet, BaseBlogViewSet
+from base.views import CategoryLevelViewSet, CategorySingleViewSet, TagsViewSet, BaseBlogViewSet
 
 from rest_framework import routers
 
@@ -44,7 +44,7 @@ router.register(r'commentlike', CommentLikeViewSet, base_name='commentlike')
 router.register(r'siteinfo', SiteInfoViewSet, base_name='siteinfo')
 router.register(r'bloggerinfo', BloggerInfoViewSet)
 router.register(r'categorylevel', CategoryLevelViewSet, base_name='categorylevel')
-router.register(r'category', CategoryViewSet, base_name='category')
+router.register(r'singlecategory', CategorySingleViewSet, base_name='singlecategory')
 
 urlpatterns = [
     url('^api/', include(router.urls)),  # Api Root

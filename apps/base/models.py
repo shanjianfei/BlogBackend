@@ -8,31 +8,26 @@ from DjangoUeditor.models import UEditorField
 # Create your models here.
 
 
-# class BaseCategory(models.Model):
-#     name = models.CharField(verbose_name='分类别名', max_length=25)
-#     desc = models.TextField(verbose_name='类别描述', max_length=120, null=True, blank=True)
-#     category = models.CharField(verbose_name='分类', max_length=25, choices=CATEGORY, help_text='添加到头部导航')
-#     parent_category = models.ForeignKey('self', verbose_name='父分类', related_name='sub_category', null=True, blank=True, help_text='父分类')
-#     create_time = models.DateTimeField(verbose_name='创建时间', auto_now=True)
-
-#     class Meta:
-#         abstruct = True
-
-
-# class FirstCategory(BaseCategory):
-#     CATEGORY = (
-#         ('article', '文章'),
-#         ('book', '书籍')
-#     )
-#     category = models.CharField(verbose_name='分类', max_length=25, choices=CATEGORY, help_text='添加到头部导航')
-#     category_level = models.IntegerField(verbose_name='分类等级', default=1, help_text='分类级别')
-
-
-class BlogCategory(models.Model):
+class BaseCategory(models.Model):
     CATEGORY = (
         ('article', '文章'),
         ('book', '书籍')
     )
+    name = models.CharField(verbose_name='分类别名', max_length=25)
+    desc = models.TextField(verbose_name='类别描述', max_length=120, null=True, blank=True)
+    category = models.CharField(verbose_name='分类', max_length=25, choices=CATEGORY, help_text='添加到头部导航')
+    index = models.CharField(verbose_name="索引", max_length=120, default="index", help_text="前端导航item中的index")
+    create_time = models.DateTimeField(verbose_name='创建时间', auto_now=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = '总分类'
+        verbose_name_plural = verbose_name + '列表'
+
+
+class BlogCategory(models.Model):
     CATEGORY_LEVEL = (
         (1, '一级'),
         (2, '二级'),
@@ -40,15 +35,15 @@ class BlogCategory(models.Model):
     )
     name = models.CharField(verbose_name='分类别名', max_length=25)
     desc = models.TextField(verbose_name='类别描述', max_length=120, null=True, blank=True)
-    category = models.CharField(verbose_name='分类', max_length=25, choices=CATEGORY, help_text='添加到头部导航')
+    category = models.ForeignKey(BaseCategory, verbose_name='总分类', related_name='sub_category')
     category_level = models.IntegerField(verbose_name='分类等级', choices=CATEGORY_LEVEL, help_text='分类级别')
-    parent_category = models.ForeignKey('self', verbose_name='父分类', related_name='sub_category', null=True, blank=True, help_text='父分类')
+    parent_category = models.ForeignKey('self', verbose_name='父分类', related_name='sub_categorylevel', null=True, blank=True, help_text='父分类')
+    index = models.CharField(verbose_name="索引", max_length=120, default="index", help_text="前端导航item中的index")
     create_time = models.DateTimeField(verbose_name='创建时间', auto_now=True)
 
     class Meta:
         verbose_name = '分类'
         verbose_name_plural = verbose_name + '列表'
-        # app_label = 'blogcategory'
     
     def __str__(self):
         return self.name

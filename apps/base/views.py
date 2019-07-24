@@ -2,32 +2,20 @@ from django.shortcuts import render
 from rest_framework import viewsets, mixins
 from rest_framework import pagination
 from rest_framework.response import Response
-from .models import BlogCategory, Tags, BaseBlog
-from .serializers import CategoryLevelSerializer, CategorySerializer, TagsSerializer, BaseBlogSerialzier
+from .models import BaseCategory, BlogCategory, Tags, BaseBlog
+from .serializers import BaseCategorySerializer, CategoryLevelSerializer, TagsSerializer, BaseBlogSerialzier
 
 # Create your views here.
 
-class CategroyPagination(pagination.PageNumberPagination):
-    page_size = 1
-    max_page_size = 1
-    def get_paginated_response(self, data):
-        if data:
-            data = data[0]['category']
-        else:
-            data = []
-        return Response({'result': data})
-
-
-class CategoryLevelViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = BlogCategory.objects.all()
+class CategorySingleViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = BlogCategory.objects.filter(category_level=1)
     serializer_class = CategoryLevelSerializer
 
 
-# 获取一级分类
-class CategoryViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
-    serializer_class = CategorySerializer
-    queryset = BlogCategory.objects.all()
-    pagination_class = CategroyPagination
+# 获取总分类
+class CategoryLevelViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    serializer_class = BaseCategorySerializer
+    queryset = BaseCategory.objects.all()
 
 
 class TagsViewSet(viewsets.ReadOnlyModelViewSet):

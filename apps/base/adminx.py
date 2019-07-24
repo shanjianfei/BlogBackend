@@ -1,5 +1,10 @@
-from .models import BlogCategory, BaseBlog, Tags
+from .models import BaseCategory, BlogCategory, BaseBlog, Tags
 import xadmin
+
+
+class BaseCategoryAdmin(object):
+    list_display = ['name', 'desc', 'category', 'create_time']
+    readonly_fileds = ['create_time']
 
 
 class BlogCategoryAdmin(object):
@@ -17,5 +22,6 @@ class TagsAdmin(object):
     readonly_fileds = ['id']
 
 xadmin.site.register(BlogCategory, BlogCategoryAdmin)
+xadmin.site.register(BaseCategory, BaseCategoryAdmin)
 xadmin.site.register(BaseBlog, BaseBlogAdmin)
 xadmin.site.register(Tags, TagsAdmin)
