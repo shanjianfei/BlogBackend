@@ -23,9 +23,8 @@ class ArticlePagination(PageNumberPagination):
         page_number = self.page.next_page_number()
         return page_number
 
-class ArticleViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+class ArticleViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
     queryset = Article.objects.all()
-    serializer_class = ArticleSerializer
     pagination_class = ArticlePagination
 
     # 分别对应 过滤、搜索、排序
@@ -34,6 +33,12 @@ class ArticleViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.
     search_fields = ('^category__name',)
     ordering_fields = ('update_time', 'click')
 
+    def get_serializer_class(self):
+        if self.action == 'update':
+            return ArticleLikeSerializer
+        else:
+            return ArticleSerializer
+
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         instance.click = F('click') + 1
@@ -41,11 +46,6 @@ class ArticleViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.
         instance = self.get_object()
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
-
-
-class ArticleLikeViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
-    serializer_class = ArticleLikeSerializer
-    queryset = Article.objects.all()
 
     def update(self, request, *args, **kwargs):
         if 'like' in request.data:
