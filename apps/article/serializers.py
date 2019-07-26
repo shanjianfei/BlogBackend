@@ -1,10 +1,12 @@
 from article.models import Article
 from comment.models import Comment
+from comment.serializers import CommentSerializer
+from base.serializers import TagsSerializer
 from rest_framework import serializers
 
 
 class ArticleSerializer(serializers.ModelSerializer):
-    tags = serializers.StringRelatedField(many=True)
+    tags = TagsSerializer(many=True)
     author = serializers.StringRelatedField()
     category = serializers.StringRelatedField()
     comment_count = serializers.SerializerMethodField()
@@ -15,11 +17,17 @@ class ArticleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Article
-        fields = ('id', 'title', 'desc', 'create_time',
-                  'update_time', 'tags', 'author', 'click', 'like', 'category', 'istop', 'cover', 'isrecommend', 'comment_count')
-        read_only_fields = ('id', 'title', 'desc', 'create_time',
-                            'update_time', 'tags', 'author', 'cover',
-                            'click', 'like', 'category', 'istop', 'picture', 'isrecommend', 'comment_count')
+        fields = '__all__'
+
+
+class ArticleDetailSerializer(serializers.ModelSerializer):
+    tags = serializers.StringRelatedField(many=True)
+    comments = CommentSerializer(many=True)
+
+    class Meta:
+        model = Article
+        fields = ('title', 'desc', 'content', 'create_time',
+                  'update_time', 'tags', 'author', 'click', 'like', 'comments', 'comment_enable')
 
 
 class ArticleLikeSerializer(serializers.Serializer):

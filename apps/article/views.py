@@ -1,6 +1,6 @@
 from rest_framework import viewsets, status, mixins, filters
 from rest_framework.response import Response
-from .serializers import ArticleSerializer, ArticleLikeSerializer
+from .serializers import ArticleSerializer, ArticleDetailSerializer, ArticleLikeSerializer
 from article.models import Article
 from django_filters import rest_framework
 from .filters import ArticleListFilter
@@ -36,6 +36,8 @@ class ArticleViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.Up
     def get_serializer_class(self):
         if self.action == 'update':
             return ArticleLikeSerializer
+        elif self.action == 'retrieve':
+            return ArticleDetailSerializer
         else:
             return ArticleSerializer
 
@@ -56,6 +58,6 @@ class ArticleViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.Up
             if like:
                 instance.like = F('like') + 1
                 instance.save()
-                Response(data={'result': '点赞成功'}, status=status.HTTP_200_OK)
+                return Response(data={'result': '点赞成功'}, status=status.HTTP_200_OK)
         else:
-            Response(data={'result': '参数错误'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(data={'result': '参数错误'}, status=status.HTTP_400_BAD_REQUEST)

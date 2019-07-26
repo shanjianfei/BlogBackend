@@ -18,7 +18,7 @@ class Comment(models.Model):
     )
     id = models.AutoField(primary_key=True)
     user = models.CharField(verbose_name='评论者昵称', max_length=20)
-    article = models.ForeignKey(Article, related_name='comment')
+    article = models.ForeignKey(Article, related_name='comments')
     content = models.CharField(verbose_name='评论内容', max_length=250, null=True, blank=True)
     create_time = models.DateTimeField(verbose_name='评论时间', auto_now_add=True)
     like = models.IntegerField(verbose_name='评论点赞', default=0)
