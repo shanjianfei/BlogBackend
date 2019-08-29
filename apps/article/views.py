@@ -42,6 +42,7 @@ class ArticleViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.Up
             return ArticleSerializer
 
     def retrieve(self, request, *args, **kwargs):
+        print(request._user)
         instance = self.get_object()
         instance.click = F('click') + 1
         instance.save()
