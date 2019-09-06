@@ -13,7 +13,7 @@ class BlogCategoryAdmin(object):
 
 
 class BaseBlogAdmin(object):
-    list_display = ('id', 'title', 'create_time', 'update_time', 'category', 'author', 'cover', 'tags', 'comment_enable', 'click', 'like', 'desc', 'istop', 'isrecommend')
+    list_display = ('id', 'title', 'create_time', 'update_time', 'category', 'author', 'cover', 'tags', 'comment_enable', 'click', 'like', 'desc', 'istop', 'isrecommend', 'isencrypt')
     readonly_fileds = ['id', 'create_time']
 
 

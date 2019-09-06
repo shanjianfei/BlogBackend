@@ -58,3 +58,8 @@ class BaseBlogSerialzier(serializers.ModelSerializer):
     class Meta:
         model = BaseBlog
         fields = '__all__'
+
+
+class BaseBlogReadPermissionVerificationSerializer(serializers.Serializer):
+    blog_id = serializers.IntegerField()
+    password = serializers.CharField(max_length=10, min_length=4)

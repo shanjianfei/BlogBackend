@@ -1,5 +1,6 @@
 from django.db import models
 from article.models import Article
+from user.models import Person
 
 # Create your models here.
 
@@ -17,7 +18,7 @@ class Comment(models.Model):
         (False, '已删除')
     )
     id = models.AutoField(primary_key=True)
-    user = models.CharField(verbose_name='评论者昵称', max_length=20)
+    user = models.ForeignKey(Person, verbose_name='评论者昵称')
     article = models.ForeignKey(Article, related_name='comments')
     content = models.CharField(verbose_name='评论内容', max_length=250, null=True, blank=True)
     create_time = models.DateTimeField(verbose_name='评论时间', auto_now_add=True)

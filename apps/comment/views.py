@@ -6,6 +6,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from .serializers import CommentLikeSerializer, CommentSerializer, SubCommentSerializer
 from .models import Comment
 from .filter import CommentFilter
+from rest_framework.authentication import TokenAuthentication
 
 # Create your views here.
 
@@ -41,6 +42,12 @@ class CommentViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.
     ordering = ('-create_time',)
 
     def create(self, request, *args, **kwargs):
+        _auth = TokenAuthentication().authenticate(request)
+        print(_auth)
+        if not _auth:
+            return Response(status=status.HTTP_401_UNAUTHORIZED, data={'result': '验证失败'})
+        user = _auth[0]
+        request.data['user'] = user
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         is_root = serializer.validated_data['is_root']

@@ -28,7 +28,7 @@ from index.views import index
 
 from article.feed import BlogFeed
 
-from base.views import CategoryLevelViewSet, CategorySingleViewSet, TagsViewSet, BaseBlogViewSet
+from base.views import CategoryLevelViewSet, CategorySingleViewSet, TagsViewSet, BaseBlogViewSet, VerifyBlogPasswordViewSet
 from user.views import UserLoginAPIView
 from user.views import UserRegisterAPIView
 
@@ -37,12 +37,13 @@ import rest_framework
 from rest_framework.authtoken import views
 
 router = routers.DefaultRouter()
-# router.register(r'login', LoginViewSet, base_name='login')
+# router.register(r'login', UserLoginAPIView, base_name='login')
 # router.register(r'register', RegisterViewSet, base_name='register')
 router.register(r'article', ArticleViewSet, base_name='article')
 # router.register(r'articlelike', ArticleLikeViewSet, base_name='articlelike')
 router.register(r'tag', TagsViewSet, base_name='tag')
 router.register(r'blog', BaseBlogViewSet, base_name='blog')
+router.register(r'verifyblogpassword', VerifyBlogPasswordViewSet, base_name='verifyblogpassword')
 
 router.register(r'comment', CommentViewSet, base_name='comment')
 router.register(r'commentlike', CommentLikeViewSet, base_name='commentlike')
@@ -55,8 +56,8 @@ router.register(r'singlecategory', CategorySingleViewSet,
                 base_name='singlecategory')
 
 urlpatterns = [
-    url(r'^login/', UserLoginAPIView.as_view()),
-    url(r'^register/', UserRegisterAPIView.as_view()),
+    url(r'^api/login/', UserLoginAPIView.as_view()),
+    url(r'^api/register/', UserRegisterAPIView.as_view()),
     url('^api/', include(router.urls)),  # Api Root
     url('^xadmin/', xadmin.site.urls),
     # 富文本

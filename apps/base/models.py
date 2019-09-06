@@ -1,11 +1,12 @@
 import datetime
 from django.db import models
 from django.db.models import F
-from user.models import AuthorProfile, UserProfile
+from django.conf import settings
 from DjangoUeditor.models import UEditorField
 
 
 # Create your models here.
+AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
 
 class BaseCategory(models.Model):
@@ -85,12 +86,16 @@ class BaseBlog(models.Model):
         (True, '推荐'),
         (False, '不推荐')
     )
+    isencrypt_choices = (
+        (True, '加密'),
+        (False, '不加密')
+    )
     id = models.AutoField(primary_key=True)
     title = models.CharField(verbose_name='标题', null=False, blank=False, max_length=128)
     create_time = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
     update_time = models.DateTimeField(verbose_name='修改时间', auto_now=True)
     category = models.ForeignKey(BlogCategory, verbose_name='分类', null=True, blank=True)
-    author = models.ForeignKey(AuthorProfile, to_field='username', null=True, blank=True)
+    author = models.ForeignKey(AUTH_USER_MODEL, null=True, blank=True)
     cover = models.ImageField(verbose_name='封面',
                                 upload_to='images/cover',
                                 null=True,
@@ -102,6 +107,8 @@ class BaseBlog(models.Model):
     desc = models.TextField(verbose_name='简介', null=True, blank=True, max_length=128)
     istop = models.BooleanField(verbose_name='置顶', choices=istop_choices, default=False)
     isrecommend = models.BooleanField(verbose_name='推荐', choices=isrecommend_choices, default=False)
+    isencrypt = models.BooleanField(verbose_name='博客加密', choices=isencrypt_choices, default=False)
+    password = models.CharField(verbose_name='浏览博客密码', null=True, blank=True, max_length=10)
 
     class Meta:
         verbose_name = '博客'

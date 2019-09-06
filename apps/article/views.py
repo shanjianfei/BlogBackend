@@ -5,6 +5,8 @@ from article.models import Article
 from django_filters import rest_framework
 from .filters import ArticleListFilter
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.decorators import authentication_classes
+from rest_framework.authentication import TokenAuthentication
 
 from django.db.models import F
 
@@ -27,6 +29,8 @@ class ArticleViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.Up
     queryset = Article.objects.all()
     pagination_class = ArticlePagination
 
+    # authentication_classes = (TokenAuthentication, )
+
     # 分别对应 过滤、搜索、排序
     filter_backends = (rest_framework.DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter,)
     filter_class = ArticleListFilter
@@ -42,8 +46,11 @@ class ArticleViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.Up
             return ArticleSerializer
 
     def retrieve(self, request, *args, **kwargs):
-        print(request._user)
         instance = self.get_object()
+        if instance.isencrypt:
+            password = request.query_params.get('password', '')
+            if password != instance.password:
+                return Response(data={'result': 'fail', 'msg': '密码错误'})
         instance.click = F('click') + 1
         instance.save()
         instance = self.get_object()
