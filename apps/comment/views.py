@@ -47,7 +47,8 @@ class CommentViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.
         if not _auth:
             return Response(status=status.HTTP_401_UNAUTHORIZED, data={'result': '验证失败'})
         user = _auth[0]
-        request.data['user'] = user
+        # print(dir(user))
+        request.data['user'] = user.pk
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         is_root = serializer.validated_data['is_root']
