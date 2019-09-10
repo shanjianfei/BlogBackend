@@ -1,8 +1,9 @@
 from django.db import models
 from article.models import Article
-from user.models import Person
+from user.models import UserProfile
 
 # Create your models here.
+
 
 class Comment(models.Model):
     root_chioice = (
@@ -18,17 +19,24 @@ class Comment(models.Model):
         (False, '已删除')
     )
     id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(Person, verbose_name='评论者昵称')
+    user = models.ForeignKey(UserProfile, verbose_name='评论者昵称')
     article = models.ForeignKey(Article, related_name='comments')
-    content = models.CharField(verbose_name='评论内容', max_length=250, null=True, blank=True)
+    content = models.CharField(
+        verbose_name='评论内容', max_length=250, null=True, blank=True)
     create_time = models.DateTimeField(verbose_name='评论时间', auto_now_add=True)
     like = models.IntegerField(verbose_name='评论点赞', default=0)
     unlike = models.IntegerField(verbose_name='评论踩', default=0)
-    is_root = models.BooleanField(verbose_name='评论是否是根评论', choices=root_chioice, default=True)
-    is_top = models.BooleanField(verbose_name='评论是否置顶', choices=top_choice, default=False)
-    is_active = models.BooleanField(verbose_name='是否删除', choices=active_choice, default=True)
-    super_comment = models.ForeignKey('self', verbose_name='上层评论', related_name='sub_comment', null=True, blank=True)
-    belong_root = models.ForeignKey('self', verbose_name='属于哪个根目录', related_name='all_sub_comment', null=True, blank=True)
+    is_root = models.BooleanField(
+        verbose_name='评论是否是根评论', choices=root_chioice, default=True)
+    is_top = models.BooleanField(
+        verbose_name='评论是否置顶', choices=top_choice, default=False)
+    is_active = models.BooleanField(
+        verbose_name='是否删除', choices=active_choice, default=True)
+    super_comment = models.ForeignKey(
+        'self', verbose_name='上层评论', related_name='sub_comment', null=True, blank=True)
+    belong_root = models.ForeignKey(
+        'self', verbose_name='属于哪个根目录', related_name='all_sub_comment', null=True, blank=True)
+    # related_name 获取所有外键关联的列表
     sub_comment_count = models.IntegerField(verbose_name='子评论数量', default=0)
 
     class Meta:

@@ -3,7 +3,7 @@ from rest_framework import mixins, viewsets, status, pagination
 from rest_framework.response import Response
 from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
-from .serializers import CommentLikeSerializer, CommentSerializer, SubCommentSerializer
+from .serializers import CommentLikeSerializer, CommentSerializer, SubCommentSerializer, CommentCreateSerializer
 from .models import Comment
 from .filter import CommentFilter
 from rest_framework.authentication import TokenAuthentication
@@ -31,7 +31,7 @@ class CommentLikeViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
         else:
             instance.unlike += 1
         instance.save()
-        return Response(status=status.HTTP_200_OK, data={'result': '操作成功'})
+        return Response(status=status.HTTP_200_OK, data={'result': 'success', 'msg': '操作成功', 'data': serializer.data})
 
 
 class CommentViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
@@ -64,12 +64,12 @@ class CommentViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.
                 (article.id == belong_root.article.id) and \
                 ((super_comment.belong_root == belong_root.id) or \
                 (super_comment.id == belong_root.id)):
-                return Response(status=status.HTTP_201_CREATED, data={'result': '添加评论成功'})
+                return Response(status=status.HTTP_201_CREATED, data={'result': 'success', 'msg': '添加评论成功', 'data': serializer.data})
             return Response(status=status.HTTP_400_BAD_REQUEST)
         else: # 根评论
             article = serializer.validated_data['article']
             self.perform_create(serializer)
-            return Response(status=status.HTTP_201_CREATED, data={'result': '添加评论成功'})
+            return Response(status=status.HTTP_201_CREATED, data={'result': 'success', 'msg': '添加评论成功', 'data': serializer.data})
 
     def get_serializer_class(self):
         if self.action == 'list':
@@ -77,4 +77,4 @@ class CommentViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.
         elif self.action == 'retrieve':
             return SubCommentSerializer
         else:
-            return CommentSerializer
+            return CommentCreateSerializer

@@ -6,4 +6,4 @@ class CommentFilter(django_filters.rest_framework.FilterSet):
 
     class Meta:
         model = Comment
-        fields = ('article_id', 'super_comment', 'belong_root')
+        fields = ('article_id', 'super_comment', 'belong_root', 'is_root')
