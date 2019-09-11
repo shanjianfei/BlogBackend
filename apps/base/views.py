@@ -7,6 +7,7 @@ from django_filters import rest_framework
 from django.db.models import F
 from .models import BaseCategory, BlogCategory, Tags, BaseBlog
 from .serializers import BaseCategorySerializer, CategoryLevelSerializer, TagsSerializer, BaseBlogSerialzier, BaseBlogReadPermissionVerificationSerializer
+from .filter import CategoryFilter
 
 # Create your views here.
 
@@ -19,6 +20,9 @@ class CategorySingleViewSet(viewsets.ReadOnlyModelViewSet):
 class CategoryLevelViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     serializer_class = BaseCategorySerializer
     queryset = BaseCategory.objects.all()
+    filter_backends = (rest_framework.DjangoFilterBackend, filters.OrderingFilter)
+    ordering_field = ('create_time', )
+    filter_class = CategoryFilter
 
 
 class TagsViewSet(viewsets.ReadOnlyModelViewSet):

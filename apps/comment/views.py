@@ -43,11 +43,9 @@ class CommentViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.
 
     def create(self, request, *args, **kwargs):
         _auth = TokenAuthentication().authenticate(request)
-        print(_auth)
         if not _auth:
             return Response(status=status.HTTP_401_UNAUTHORIZED, data={'result': '验证失败'})
         user = _auth[0]
-        # print(dir(user))
         request.data['user'] = user.pk
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -64,10 +62,10 @@ class CommentViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.
                 (article.id == belong_root.article.id) and \
                 ((super_comment.belong_root == belong_root.id) or \
                 (super_comment.id == belong_root.id)):
+                self.perform_create(serializer)
                 return Response(status=status.HTTP_201_CREATED, data={'result': 'success', 'msg': '添加评论成功', 'data': serializer.data})
             return Response(status=status.HTTP_400_BAD_REQUEST)
         else: # 根评论
-            article = serializer.validated_data['article']
             self.perform_create(serializer)
             return Response(status=status.HTTP_201_CREATED, data={'result': 'success', 'msg': '添加评论成功', 'data': serializer.data})
 
