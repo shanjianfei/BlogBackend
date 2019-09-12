@@ -5,7 +5,7 @@ import django_filters
 class ArticleListFilter(django_filters.rest_framework.FilterSet):
     # contains 包含， 但是不忽略大小写， icontains 忽略大小写
     title = django_filters.CharFilter(name='title', lookup_expr='icontains')
-    category = django_filters.CharFilter(name='category__category', lookup_expr='icontains')
+    category = django_filters.CharFilter(name='category__index', lookup_expr='iexact')
     min_datetime = django_filters.DateTimeFilter(name='create_time', lookup_expr='gte')
     max_datetime = django_filters.DateTimeFilter(name='create_time', lookup_expr='lte')
     tags = django_filters.CharFilter(name='tags__label', lookup_expr='icontains')
