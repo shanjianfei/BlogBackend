@@ -7,9 +7,24 @@ from django_filters import rest_framework
 from django.db.models import F
 from .models import BaseCategory, BlogCategory, Tags, BaseBlog
 from .serializers import BaseCategorySerializer, CategoryLevelSerializer, TagsSerializer, BaseBlogSerialzier, BaseBlogReadPermissionVerificationSerializer
-from .filter import CategoryFilter
+from .filters import CategoryFilter, BlogFilter
+from rest_framework.pagination import PageNumberPagination
+
 
 # Create your views here.
+
+class BlogPagination(PageNumberPagination):
+    page_size = 6
+    max_page_size = 10
+    page_size_query_param = 'size'
+    page_query_param = 'page'
+
+    def get_next_link(self):
+        if not self.page.has_next():
+            return None
+        page_number = self.page.next_page_number()
+        return page_number
+
 
 class CategorySingleViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = BlogCategory.objects.filter(category_level=1)
@@ -32,7 +47,9 @@ class TagsViewSet(viewsets.ReadOnlyModelViewSet):
 
 class BaseBlogViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
     queryset = BaseBlog.objects.all()
+    pagination_class = BlogPagination
     serializer_class = BaseBlogSerialzier
+    filter_class = BlogFilter
     filter_backends = (rest_framework.DjangoFilterBackend, filters.OrderingFilter)
     ordering_field = ('create_time', 'click')
     
