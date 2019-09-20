@@ -67,6 +67,7 @@ class CommentViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.
             return Response(status=status.HTTP_400_BAD_REQUEST)
         else: # 根评论
             self.perform_create(serializer)
+            serializer.data['user'] = user
             return Response(status=status.HTTP_201_CREATED, data={'result': 'success', 'msg': '添加评论成功', 'data': serializer.data})
 
     def get_serializer_class(self):

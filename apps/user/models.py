@@ -18,7 +18,7 @@ class Person(AbstractUser):
         # verbose_name='邮箱', max_length=150, blank=True, null=True)
     gender = models.IntegerField(
         verbose_name='性别', choices=gender_choice, null=True, blank=True)
-    avater = models.ImageField(
+    avatar = models.ImageField(
         verbose_name='头像', upload_to='avater', null=True, blank=True)
     # create_time = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
     # active = models.BooleanField(verbose_name='活跃状态', default=True)
