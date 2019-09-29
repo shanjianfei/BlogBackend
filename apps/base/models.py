@@ -14,9 +14,9 @@ class BaseCategory(models.Model):
         ('article', '文章'),
         ('book', '书籍')
     )
-    name = models.CharField(verbose_name='分类别名', max_length=25)
+    name = models.CharField(verbose_name='分类别名', max_length=25, help_text='添加到头部导航')
     desc = models.TextField(verbose_name='类别描述', max_length=120, null=True, blank=True)
-    category = models.CharField(verbose_name='分类', max_length=25, choices=CATEGORY, help_text='添加到头部导航')
+    category = models.CharField(verbose_name='分类', max_length=25, choices=CATEGORY)
     index = models.CharField(verbose_name="索引", max_length=120, default="index", help_text="前端导航item中的index")
     create_time = models.DateTimeField(verbose_name='创建时间', auto_now=True)
 
@@ -34,7 +34,7 @@ class BlogCategory(models.Model):
         (2, '二级'),
         (3, '三级')
     )
-    name = models.CharField(verbose_name='分类别名', max_length=25)
+    name = models.CharField(verbose_name='分类别名', max_length=25, help_text='添加到头部导航')
     desc = models.TextField(verbose_name='类别描述', max_length=120, null=True, blank=True)
     category = models.ForeignKey(BaseCategory, verbose_name='总分类', related_name='sub_category')
     category_level = models.IntegerField(verbose_name='分类等级', choices=CATEGORY_LEVEL, help_text='分类级别')

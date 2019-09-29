@@ -13,21 +13,25 @@ class ArticleSerializer(serializers.ModelSerializer):
 
     def get_comment_count(self, instance):
         return Comment.objects.filter(article=instance).count()
-        # return instance.comment_set.all().count()
 
     class Meta:
         model = Article
-        fields = '__all__'
+        exclude = ('content',)
 
 
 class ArticleDetailSerializer(serializers.ModelSerializer):
     tags = serializers.StringRelatedField(many=True)
     comments = CommentSerializer(many=True)
+    comment_count = serializers.SerializerMethodField()
+
+    def get_comment_count(self, instance):
+        return Comment.objects.filter(article=instance).count()
 
     class Meta:
         model = Article
-        fields = ('title', 'desc', 'content', 'create_time',
-                  'update_time', 'tags', 'author', 'click', 'like', 'comments', 'comment_enable')
+        # fields = ('title', 'desc', 'content', 'create_time',
+        #           'update_time', 'tags', 'author', 'click', 'like', 'comments', 'comment_enable')
+        fields = '__all__'
 
 
 class ArticleLikeSerializer(serializers.Serializer):

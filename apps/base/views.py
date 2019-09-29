@@ -14,8 +14,8 @@ from rest_framework.pagination import PageNumberPagination
 # Create your views here.
 
 class BlogPagination(PageNumberPagination):
-    page_size = 6
-    max_page_size = 10
+    page_size = 100
+    max_page_size = 150
     page_size_query_param = 'size'
     page_query_param = 'page'
 
@@ -91,5 +91,3 @@ class VerifyBlogPasswordViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet
             return Response(data=data, status=status.HTTP_200_OK)
         else:
             return Response(data={'result': 'fail', 'msg': '文章不存在'}, status=status.HTTP_404_NOT_FOUND)
-
-        
