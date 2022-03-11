@@ -49,4 +49,4 @@ xlrd                    ==1.1.0
 xlwt                    ==1.2.0
 PyMySQL                 ==0.9.3
 DjangoUeditor           ==1.8.143
-pillow                  ==6.1.0
+pillow                  ==9.0.1
