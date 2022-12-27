@@ -36,7 +36,7 @@ PyYAML                  ==3.12
 qiniu                   ==7.2.0
 redis                   ==2.10.6
 requests                ==2.18.4
-setuptools              ==40.8.0
+setuptools              ==65.5.1
 six                     ==1.11.0
 tablib                  ==0.12.1
 unicodecsv              ==0.14.1
